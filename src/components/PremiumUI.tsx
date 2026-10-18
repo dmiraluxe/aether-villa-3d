@@ -24,9 +24,9 @@ export function PremiumUI({
   if (!entered) {
     return (
       <div className="premium-intro">
-        <a className="premium-brand" href="#experience" aria-label="DMIRALUXE — The Office">
+        <a className="premium-brand" href="#experience" aria-label="DMIRALUXE Estates — The Office">
           DMIRALUXE
-          <span>THE OFFICE</span>
+          <span>ESTATES</span>
         </a>
         <div className="premium-intro-copy">
           <span className="premium-eyebrow">A NEW PERSPECTIVE ON WORK</span>
@@ -34,7 +34,7 @@ export function PremiumUI({
           <p>A considered workplace, brought to life in an interactive architectural tour.</p>
         </div>
         <div className="premium-intro-footer">
-          <span>DMIRALUXE — PRIVATE OFFICE</span>
+          <span>DMIRALUXE ESTATES — PRIVATE OFFICE</span>
           <button className="premium-enter" onClick={onEnter}>
             ENTER THE EXPERIENCE <span aria-hidden="true">↗</span>
           </button>
@@ -46,9 +46,9 @@ export function PremiumUI({
   return (
     <>
       <header className="premium-header">
-        <a className="premium-brand" href="#experience" aria-label="DMIRALUXE — The Office">
+        <a className="premium-brand" href="#experience" aria-label="DMIRALUXE Estates — The Office">
           DMIRALUXE
-          <span>THE OFFICE</span>
+          <span>ESTATES</span>
         </a>
         <div className="premium-live"><i /> LIVE WALKTHROUGH</div>
       </header>

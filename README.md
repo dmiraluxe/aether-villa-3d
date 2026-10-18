@@ -1,6 +1,6 @@
-# DMIRALUXE — The Office
+# DMIRALUXE Estates — The Office
 
-A luxury office experience with a procedural, first-person 3D walkthrough and scrollable editorial sections. The office geometry is built in Three.js / React Three Fiber, with its room sequence and proportions interpreted from `public/images/office-reference.jpg`. The reference is also used in the optional floor-map overlay, never as the 3D scene background.
+A luxury office experience from DMIRALUXE Estates, with a procedural first-person 3D walkthrough and scrollable editorial sections. The office geometry is built in Three.js / React Three Fiber, with its room sequence and proportions interpreted from `public/images/office-reference.jpg`. The reference is also used in the optional floor-map overlay, never as the 3D scene background.
 
 ## Run locally
 
