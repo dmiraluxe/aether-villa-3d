@@ -1,5 +1,5 @@
 import { Canvas, useThree } from '@react-three/fiber'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import * as THREE from 'three'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { mainEntrance } from '../config/officeLayout'
@@ -77,13 +77,24 @@ export function ExperienceCanvas({
   onTourComplete,
   onSpaceSnapshotsReady
 }: ExperienceCanvasProps) {
+  const [mobileQuality, setMobileQuality] = useState(() =>
+    window.matchMedia('(max-width: 760px), (pointer: coarse)').matches
+  )
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 760px), (pointer: coarse)')
+    const updateQuality = () => setMobileQuality(media.matches)
+    media.addEventListener('change', updateQuality)
+    return () => media.removeEventListener('change', updateQuality)
+  }, [])
+
   return (
     <Canvas
-      shadows
+      shadows={!mobileQuality}
       frameloop={visible ? 'always' : 'demand'}
-      dpr={[1, 1.5]}
+      dpr={mobileQuality ? 1 : [1, 1.5]}
       gl={{
-        antialias: true,
+        antialias: !mobileQuality,
         powerPreference: 'high-performance',
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 1.28,

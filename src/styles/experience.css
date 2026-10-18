@@ -1530,10 +1530,106 @@
   line-height: 1.65;
 }
 
+.viewing-form {
+  width: min(100%, 690px);
+  margin: 2rem auto 0;
+}
+
+.viewing-form-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  text-align: left;
+}
+
+.viewing-form-fields label {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.viewing-form-fields label > span {
+  color: rgba(222, 203, 171, 0.82);
+  font-size: 0.45rem;
+  letter-spacing: 0.15em;
+}
+
+.viewing-form-fields label small {
+  color: rgba(236, 230, 219, 0.4);
+  font-size: 0.4rem;
+}
+
+.viewing-form-fields input,
+.viewing-form-fields select,
+.viewing-form-fields textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.72rem 0.8rem;
+  border: 1px solid rgba(234, 224, 207, 0.2);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.035);
+  color: #f0ece3;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 300;
+}
+
+.viewing-form-fields select {
+  color-scheme: dark;
+}
+
+.viewing-form-fields textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.viewing-form-fields input::placeholder,
+.viewing-form-fields textarea::placeholder {
+  color: rgba(236, 230, 219, 0.36);
+}
+
+.viewing-form-fields input:focus-visible,
+.viewing-form-fields select:focus-visible,
+.viewing-form-fields textarea:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.viewing-message {
+  grid-column: 1 / -1;
+}
+
 .viewing-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.3rem;
+  padding: 0 1rem;
+  border: 1px solid rgba(221, 200, 167, 0.52);
+  background: rgba(25, 25, 22, 0.55);
+  color: #f0e8d9;
   min-height: 43px;
   font-size: 0.52rem;
+  letter-spacing: 0.15em;
   text-decoration: none;
+  transition: color 170ms ease, background 170ms ease, border-color 170ms ease;
+}
+
+.viewing-button > span {
+  color: #d0b384;
+}
+
+.viewing-form-note {
+  min-height: 1.4em;
+  margin: 0.85rem 0 0 !important;
+  font-size: 0.62rem !important;
+}
+
+.viewing-form-note a {
+  color: #cfb183;
+  text-underline-offset: 3px;
 }
 
 .viewing-button:hover {
@@ -1927,6 +2023,24 @@
   .private-viewing-section {
     min-height: 500px;
     padding: 4.4rem 1.25rem 0;
+  }
+
+  .viewing-form {
+    margin-top: 1.5rem;
+  }
+
+  .viewing-form-fields {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .viewing-message {
+    grid-column: auto;
+  }
+
+  .viewing-button {
+    width: 100%;
+    min-height: 46px;
   }
 
   .site-footer {

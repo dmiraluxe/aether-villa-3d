@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { mainEntrance, officeRooms } from './config/officeLayout'
 import { CabinNavigator } from './components/CabinNavigator'
 import { FloorMapOverlay } from './components/FloorMap'
@@ -29,6 +29,29 @@ export default function App() {
   const [mapOpen, setMapOpen] = useState(false)
   const [selectedSpace, setSelectedSpace] = useState<ShowcaseSpace | null>(null)
   const [spaceSnapshots, setSpaceSnapshots] = useState<Record<string, string>>({})
+  const [inquiryStatus, setInquiryStatus] = useState('')
+
+  const submitViewingInquiry = useCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const name = String(formData.get('name') ?? '').trim()
+    const email = String(formData.get('email') ?? '').trim()
+    const company = String(formData.get('company') ?? '').trim()
+    const timing = String(formData.get('timing') ?? '').trim()
+    const message = String(formData.get('message') ?? '').trim()
+    const subject = `Private viewing request — ${name}`
+    const body = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      company && `Company: ${company}`,
+      timing && `Preferred timing: ${timing}`,
+      '',
+      message && `Message: ${message}`
+    ].filter(Boolean).join('\n')
+
+    setInquiryStatus('Your email app should open with the inquiry prepared. Send the email to complete your request.')
+    window.location.href = `mailto:CEO.DIVEXA@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  }, [])
 
   const enterWalkthrough = useCallback(() => {
     setEntered(true)
@@ -229,8 +252,40 @@ export default function App() {
         <div className="private-viewing-content">
           <span>THE NEXT STEP</span>
           <h2>See what’s<br /><em>possible.</em></h2>
-          <p>Begin a conversation about a private viewing of the DMIRALUXE office.</p>
-          <a href="#experience" className="viewing-button">RETURN TO DMIRALUXE <span>↑</span></a>
+          <p>Tell us a little about your visit. We’ll open a prepared inquiry in your email app.</p>
+          <form className="viewing-form" onSubmit={submitViewingInquiry}>
+            <div className="viewing-form-fields">
+              <label>
+                <span>YOUR NAME</span>
+                <input autoComplete="name" name="name" placeholder="Full name" required />
+              </label>
+              <label>
+                <span>EMAIL ADDRESS</span>
+                <input autoComplete="email" name="email" placeholder="you@company.com" required type="email" />
+              </label>
+              <label>
+                <span>COMPANY <small>OPTIONAL</small></span>
+                <input autoComplete="organization" name="company" placeholder="Company name" />
+              </label>
+              <label>
+                <span>PREFERRED TIMING</span>
+                <select defaultValue="" name="timing">
+                  <option value="">Select an option</option>
+                  <option>As soon as possible</option>
+                  <option>Within the next month</option>
+                  <option>Just exploring</option>
+                </select>
+              </label>
+              <label className="viewing-message">
+                <span>ANYTHING WE SHOULD KNOW? <small>OPTIONAL</small></span>
+                <textarea name="message" placeholder="Share a little about your visit." rows={3} />
+              </label>
+            </div>
+            <button className="viewing-button" type="submit">REQUEST A PRIVATE VIEWING <span>↗</span></button>
+            <p className="viewing-form-note" role="status" aria-live="polite">
+              {inquiryStatus || <>Submitting opens a prepared email to <a href="mailto:CEO.DIVEXA@gmail.com">CEO.DIVEXA@gmail.com</a>.</>}
+            </p>
+          </form>
         </div>
         <footer className="site-footer">
           <span>DMIRALUXE</span>

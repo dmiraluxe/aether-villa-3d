@@ -4,9 +4,6 @@ import * as THREE from 'three'
 import { officeRooms } from '../config/officeLayout'
 import { showcaseSpaces } from './SpaceShowcase'
 
-const SNAPSHOT_WIDTH = 640
-const SNAPSHOT_HEIGHT = 400
-
 export function SpaceSnapshotCapture({
   onComplete
 }: {
@@ -17,7 +14,10 @@ export function SpaceSnapshotCapture({
   useEffect(() => {
     let disposed = false
     const timer = window.setTimeout(() => {
-      const renderTarget = new THREE.WebGLRenderTarget(SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT, {
+      const mobile = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches
+      const snapshotWidth = mobile ? 360 : 640
+      const snapshotHeight = mobile ? 225 : 400
+      const renderTarget = new THREE.WebGLRenderTarget(snapshotWidth, snapshotHeight, {
         format: THREE.RGBAFormat,
         type: THREE.UnsignedByteType,
         depthBuffer: true,
@@ -30,11 +30,11 @@ export function SpaceSnapshotCapture({
       const previousScissor = gl.getScissor(new THREE.Vector4())
       const previousScissorTest = gl.getScissorTest()
       const snapshots: Record<string, string> = {}
-      const camera = new THREE.PerspectiveCamera(58, SNAPSHOT_WIDTH / SNAPSHOT_HEIGHT, 0.1, 80)
-      const pixels = new Uint8Array(SNAPSHOT_WIDTH * SNAPSHOT_HEIGHT * 4)
+      const camera = new THREE.PerspectiveCamera(58, snapshotWidth / snapshotHeight, 0.1, 80)
+      const pixels = new Uint8Array(snapshotWidth * snapshotHeight * 4)
       const canvas = document.createElement('canvas')
-      canvas.width = SNAPSHOT_WIDTH
-      canvas.height = SNAPSHOT_HEIGHT
+      canvas.width = snapshotWidth
+      canvas.height = snapshotHeight
       const context = canvas.getContext('2d')
       if (!context) {
         renderTarget.dispose()
@@ -61,13 +61,13 @@ export function SpaceSnapshotCapture({
           camera.updateMatrixWorld()
           gl.clear(true, true, true)
           gl.render(scene, camera)
-          gl.readRenderTargetPixels(renderTarget, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT, pixels)
+          gl.readRenderTargetPixels(renderTarget, 0, 0, snapshotWidth, snapshotHeight, pixels)
 
-          const imageData = context.createImageData(SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT)
-          for (let y = 0; y < SNAPSHOT_HEIGHT; y += 1) {
-            const sourceOffset = (SNAPSHOT_HEIGHT - y - 1) * SNAPSHOT_WIDTH * 4
-            const destinationOffset = y * SNAPSHOT_WIDTH * 4
-            imageData.data.set(pixels.subarray(sourceOffset, sourceOffset + SNAPSHOT_WIDTH * 4), destinationOffset)
+          const imageData = context.createImageData(snapshotWidth, snapshotHeight)
+          for (let y = 0; y < snapshotHeight; y += 1) {
+            const sourceOffset = (snapshotHeight - y - 1) * snapshotWidth * 4
+            const destinationOffset = y * snapshotWidth * 4
+            imageData.data.set(pixels.subarray(sourceOffset, sourceOffset + snapshotWidth * 4), destinationOffset)
           }
           context.putImageData(imageData, 0, 0)
           snapshots[space.id] = canvas.toDataURL('image/webp', 0.84)
