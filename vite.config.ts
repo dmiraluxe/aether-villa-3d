@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
+  base: '/aether-villa-3d/',
   plugins: [react()],
   server: {
     port: 5173,
