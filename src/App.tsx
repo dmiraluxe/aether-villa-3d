@@ -5,6 +5,7 @@ import { FloorMapOverlay } from './components/FloorMap'
 import { MobileJoystick } from './components/OfficeHud'
 import { PremiumUI } from './components/PremiumUI'
 import { SpaceDetailCurtain, SpaceShowcase, type ShowcaseSpace } from './components/SpaceShowcase'
+import { EditorialNavigation } from './components/EditorialNavigation'
 import './styles/global.css'
 import './styles/experience.css'
 
@@ -15,6 +16,7 @@ const ExperienceCanvas = lazy(() =>
 type Position = { x: number; z: number }
 
 export default function App() {
+  const siteRef = useRef<HTMLElement>(null)
   const heroRef = useRef<HTMLElement>(null)
   const [entered, setEntered] = useState(false)
   const [tourPlaying, setTourPlaying] = useState(false)
@@ -102,8 +104,69 @@ export default function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const site = siteRef.current
+    if (!site || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const targets = site.querySelectorAll<HTMLElement>([
+      '.editorial-section .section-index',
+      '.editorial-section h2',
+      '.editorial-copy',
+      '.office-stats > *',
+      '.architecture-section .section-index',
+      '.architecture-heading',
+      '.material-card',
+      '.amenities-section .section-index',
+      '.amenities-layout > div:first-child',
+      '.amenities-list article',
+      '.experience-story-section .section-index',
+      '.experience-story-copy',
+      '.private-viewing-section .section-index',
+      '.private-viewing-content > span',
+      '.private-viewing-content h2',
+      '.private-viewing-content > p',
+      '.viewing-form',
+      '.site-footer > *'
+    ].join(','))
+    const siblingIndex = new Map<HTMLElement, number>()
+    const sections = site.querySelectorAll<HTMLElement>(
+      '.editorial-section, .architecture-section, .amenities-section, .experience-story-section, .private-viewing-section'
+    )
+
+    targets.forEach((target) => {
+      const section = target.closest<HTMLElement>('section')
+      const index = section ? siblingIndex.get(section) ?? 0 : 0
+      if (section) siblingIndex.set(section, index + 1)
+      target.dataset.editorialReveal = ''
+      target.style.setProperty('--reveal-delay', `${Math.min(index * 85, 340)}ms`)
+    })
+
+    site.classList.add('motion-ready')
+    const revealedSections = new Set<HTMLElement>()
+    const revealInView = () => {
+      sections.forEach((section) => {
+        if (revealedSections.has(section)) return
+        const bounds = section.getBoundingClientRect()
+        if (bounds.top > window.innerHeight * 0.88 || bounds.bottom < 0) return
+        section.querySelectorAll<HTMLElement>('[data-editorial-reveal]')
+          .forEach((target) => target.classList.add('is-editorial-visible'))
+        revealedSections.add(section)
+      })
+    }
+
+    window.addEventListener('scroll', revealInView, { passive: true })
+    window.addEventListener('resize', revealInView)
+    revealInView()
+    return () => {
+      window.removeEventListener('scroll', revealInView)
+      window.removeEventListener('resize', revealInView)
+      site.classList.remove('motion-ready')
+    }
+  }, [])
+
   return (
-    <main className="site-shell">
+    <main className="site-shell" ref={siteRef}>
+      <EditorialNavigation />
       <section className="experience-section" id="experience" ref={heroRef}>
         <div className="experience-canvas">
           {entered && (

@@ -30,7 +30,10 @@ export function PremiumUI({
         </a>
         <div className="premium-intro-copy">
           <span className="premium-eyebrow">A NEW PERSPECTIVE ON WORK</span>
-          <h1>Where Architecture<br /><em>Meets Ambition.</em></h1>
+          <h1 className="premium-headline">
+            <span className="premium-headline-line"><span>Where Architecture</span></span>
+            <span className="premium-headline-line is-accent"><span>Meets Ambition.</span></span>
+          </h1>
           <p>A considered workplace, brought to life in an interactive architectural tour.</p>
         </div>
         <div className="premium-intro-footer">
